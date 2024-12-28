@@ -114,3 +114,5 @@
 @section("scriptJS")
     @include("layouts.master.barangObat.lokasiBarangObat.scriptJS")
 @append
+
+{{-- lutfi --}}
