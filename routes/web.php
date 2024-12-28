@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Master\BarangObat\lokasiBarangObatController;
 use App\Http\Controllers\Master\BarangObat\SatuanBarangController;
+use App\Http\Controllers\Master\BarangObat\SupplierBarangObatController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Setting\PermissionsetController;
 use App\Http\Controllers\Setting\RolesetController;
@@ -77,14 +78,14 @@ Route::middleware('auth')->group(function () {
         Route::post('/lokasiBarang/uploadTemplate', [lokasiBarangObatController::class, 'uploadExcel'])->name('master.lokasiBarang.uploadTemplate');
 
         // Supplier Barang
-        Route::get('/lokasiBarang', [lokasiBarangObatController::class, 'index'])->name('master.lokasiBarang');
-        Route::get('/lokasiBarang/table', [lokasiBarangObatController::class, 'table'])->name('master.lokasiBarang.table');
-        Route::post('/lokasiBarang/store', [lokasiBarangObatController::class, 'store'])->name('master.lokasiBarang.store');
-        Route::get('/lokasiBarang/{id}/edit', [lokasiBarangObatController::class, 'edit'])->name('master.lokasiBarang.edit');
-        Route::put('/lokasiBarang/{id}/update', [lokasiBarangObatController::class, 'update'])->name('master.lokasiBarang.update');
-        Route::delete('/lokasiBarang/{id}/delete', [lokasiBarangObatController::class, 'destroy'])->name('master.lokasiBarang.delete');
-        Route::get('/lokasiBarang/downloadTemplate', [lokasiBarangObatController::class, 'downloadTemplate'])->name('master.lokasiBarang.downloadTemplate');
-        Route::post('/lokasiBarang/uploadTemplate', [lokasiBarangObatController::class, 'uploadExcel'])->name('master.lokasiBarang.uploadTemplate');
+        Route::get('supplierBarang', [SupplierBarangObatController::class, 'index'])->name('master.supplierBarang');
+        Route::get('supplierBarang/table', [SupplierBarangObatController::class, 'table'])->name('master.supplierBarang.table');
+        Route::post('supplierBarang/store', [SupplierBarangObatController::class, 'store'])->name('master.supplierBarang.store');
+        Route::get('supplierBarang/{id}/edit', [SupplierBarangObatController::class, 'edit'])->name('master.supplierBarang.edit');
+        Route::put('supplierBarang/{id}/update', [SupplierBarangObatController::class, 'update'])->name('master.supplierBarang.update');
+        Route::delete('supplierBarang/{id}/delete', [SupplierBarangObatController::class, 'destroy'])->name('master.supplierBarang.delete');
+        Route::get('supplierBarang/downloadTemplate', [SupplierBarangObatController::class, 'downloadTemplate'])->name('master.supplierBarang.downloadTemplate');
+        Route::post('supplierBarang/uploadTemplate', [SupplierBarangObatController::class, 'uploadExcel'])->name('master.supplierBarang.uploadTemplate');
     });
 
 });

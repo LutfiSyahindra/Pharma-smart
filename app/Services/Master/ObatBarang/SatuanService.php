@@ -11,7 +11,7 @@ class SatuanService
 {
     /**
      * Create a new class instance.
-     */
+     */ 
     public function getAll()
     {
         return Satuan::GetData();

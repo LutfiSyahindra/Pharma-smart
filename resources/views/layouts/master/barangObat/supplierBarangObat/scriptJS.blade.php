@@ -1,15 +1,15 @@
 <script>
     $(document).ready(function() {
-
+        // Multiple Input
         var i = 0;
 
         // Menambah input baru
         $("#add").click(function() {
             ++i;
             $("#dynamicTable").append('<tr><td><input type="text" name="addmore[' + i +
-                '][kode_lokasi]" placeholder="Masukkan Kode lokasi" class="form-control" required /></td><td><input type="text" name="addmore[' +
+                '][kode_supplier]" placeholder="Masukkan Kode supplier" class="form-control" required /></td><td><input type="text" name="addmore[' +
                 i +
-                '][lokasi]" placeholder="Masukkan lokasi" class="form-control" required /></td><td><button type="button" class="btn btn-danger remove-tr">Hapus</button></td></tr>'
+                '][supplier]" placeholder="Masukkan supplier" class="form-control" required /></td><td><button type="button" class="btn btn-danger remove-tr">Hapus</button></td></tr>'
             );
         });
 
@@ -18,21 +18,13 @@
             $(this).parents('tr').remove();
         });
 
-        window.lokasiFormContainer = function lokasiFormContainer() {
-            // Sembunyikan div form
-            const formContainer = document.getElementById('lokasiFormContainer');
-            formContainer.style.display = 'none';
-
-            // Reset form jika diperlukan
-            document.getElementById('lokasiUpdateForm').reset();
-        }
-
-        let lokasiTable = $('#tableLokasi').DataTable({
+        // Table
+        let supplierTable = $('#tableSupplier').DataTable({
             destroy: true,
             processing: true,
             serverSide: true,
             ajax: {
-                url: "{{ route("master.lokasiBarang.table") }}", // Sesuaikan dengan route Anda
+                url: "{{ route("master.supplierBarang.table") }}", // Sesuaikan dengan route Anda
                 type: "GET"
             },
             columns: [{
@@ -42,12 +34,12 @@
                     searchable: false
                 },
                 {
-                    data: 'kode_lokasi',
-                    name: 'kode_lokasi'
+                    data: 'kode_supplier',
+                    name: 'kode_supplier'
                 },
                 {
-                    data: 'lokasi',
-                    name: 'lokasi'
+                    data: 'supplier',
+                    name: 'supplier'
                 },
                 {
                     data: 'actions',
@@ -58,18 +50,19 @@
             ]
         });
 
-        $('#lokasiForm').on('submit', function(e) {
+        // add Supplier
+        $('#supplierForm').on('submit', function(e) {
             e.preventDefault();
 
             let formData = $(this).serialize();
 
             $.ajax({
-                url: "{{ route("master.lokasiBarang.store") }}",
+                url: "{{ route("master.supplierBarang.store") }}",
                 method: 'POST',
                 data: formData,
                 success: function(response) {
                     if (response.status === 'success') {
-                        $('#lokasiModal').modal('hide');
+                        $('#supplierModal').modal('hide');
 
                         const Toast = Swal.mixin({
                             toast: true,
@@ -84,10 +77,10 @@
                             title: response.message,
                         });
 
-                        $('#lokasiForm')[0].reset();
+                        $('#supplierForm')[0].reset();
 
                         // Reload DataTables
-                        lokasiTable.ajax.reload();
+                        supplierTable.ajax.reload();
                     }
                 },
                 error: function(xhr) {
@@ -102,15 +95,16 @@
             });
         });
 
-        window.editLokasi = function(id) {
+        // edit Supplier
+        window.editSupplier = function(id) {
             // Tampilkan form permission
-            const formContainer = document.getElementById('lokasiFormContainer');
+            const formContainer = document.getElementById('supplierFormContainer');
             formContainer.style.display = 'block';
 
             // Isi roleId dan roleName
-            document.getElementById('lokasiId').value = id;
+            document.getElementById('supplierId').value = id;
             $.ajax({
-                url: "{{ route("master.lokasiBarang.edit", ":id") }}".replace(':id',
+                url: "{{ route("master.supplierBarang.edit", ":id") }}".replace(':id',
                     id),
                 method: "GET",
                 data: {
@@ -120,11 +114,11 @@
                 success: function(response) {
                     if (response.status === 'success') {
                         // Isi field form dengan data yang didapat dari response
-                        document.getElementById('lokasiId').value = response.lokasiFind.id;
-                        document.getElementById('kode_lokasi').value = response.lokasiFind
-                            .kode_lokasi;
-                        document.getElementById('lokasi').value = response.lokasiFind
-                            .lokasi;
+                        document.getElementById('supplierId').value = response.supplierFind.id;
+                        document.getElementById('kode_supplier').value = response.supplierFind
+                            .kode_supplier;
+                        document.getElementById('supplier').value = response.supplierFind
+                            .supplier;
                     } else {
                         // Menangani error jika data tidak ditemukan
                         alert('Data tidak ditemukan.');
@@ -136,28 +130,33 @@
             });
         };
 
-        $('#lokasiExcellModal').on('hidden.bs.modal', function() {
-            // Reset form saat modal ditutup
-            $('#lokasiExcellForm')[0].reset(); // Reset seluruh form
-            $('#file').val(''); // Reset input file
-        });
+        // Close editSupplier
+        window.closeSupplierForm = function closeSupplierForm() {
+            // Sembunyikan div form
+            const formContainer = document.getElementById('supplierFormContainer');
+            formContainer.style.display = 'none';
 
-        $('#lokasiUpdateForm').on('submit', function(e) {
+            // Reset form jika diperlukan
+            document.getElementById('supplierForm').reset();
+        }
+
+        // Update Supplier
+        $('#supplierUpdateForm').on('submit', function(e) {
             e.preventDefault(); // Mencegah reload halaman
 
             // Ambil ID satuan dari input hidden
-            let lokasiId = $('#lokasiId').val();
+            let supplierId = $('#supplierId').val();
 
             // Serialisasi form data
             let formData = $(this).serialize(); // Ini akan mengambil semua input yang ada di form
 
             // URL untuk mengupdate data
-            let url = "{{ route("master.lokasiBarang.update", ":id") }}".replace(':id', lokasiId);
+            let url = "{{ route("master.supplierBarang.update", ":id") }}".replace(':id', supplierId);
 
             // Tampilkan konfirmasi dengan SweetAlert
             Swal.fire({
                 title: 'Apakah Anda yakin?',
-                text: 'Lokasi ini akan diupdate!',
+                text: 'Supplier ini akan diupdate!',
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonText: 'Ya, Update!',
@@ -179,8 +178,8 @@
                                     response.message,
                                     'success'
                                 );
-                                lokasiFormContainer();
-                                lokasiTable.ajax
+                                closeSupplierForm();
+                                supplierTable.ajax
                                     .reload(); // Reload DataTables jika ada
                             } else {
                                 Swal.fire(
@@ -193,7 +192,7 @@
                         error: function(xhr) {
                             Swal.fire(
                                 'Gagal!',
-                                'Terjadi kesalahan saat mengupdate satuan.',
+                                'Terjadi kesalahan saat mengupdate supplier.',
                                 'error'
                             );
                         }
@@ -202,11 +201,12 @@
             });
         });
 
-        window.deleteLokasi = function(id) {
+        // delete Supplier
+        window.deleteSupplier = function(id) {
             // Tampilkan konfirmasi hapus
             Swal.fire({
                 title: 'Apakah Anda yakin?',
-                text: 'Lokasi ini akan dihapus secara permanen!',
+                text: 'Suplier ini akan dihapus secara permanen!',
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonText: 'Ya, hapus!',
@@ -215,7 +215,7 @@
                 if (result.isConfirmed) {
                     // Kirim request DELETE menggunakan AJAX
                     $.ajax({
-                        url: "{{ route("master.lokasiBarang.delete", ":id") }}".replace(
+                        url: "{{ route("master.supplierBarang.delete", ":id") }}".replace(
                             ':id',
                             id),
                         type: 'DELETE',
@@ -229,7 +229,7 @@
                                     response.message,
                                     'success'
                                 );
-                                lokasiTable.ajax.reload(); // Reload DataTables
+                                supplierTable.ajax.reload(); // Reload DataTables
                             } else {
                                 Swal.fire(
                                     'Gagal!',
@@ -241,7 +241,7 @@
                         error: function(xhr) {
                             Swal.fire(
                                 'Gagal!',
-                                'Terjadi kesalahan saat menghapus lokasi.',
+                                'Terjadi kesalahan saat menghapus supplier.',
                                 'error'
                             );
                         }
@@ -250,12 +250,14 @@
             });
         }
 
+        // download template excell
         $('#downloadTemplate').on('click', function() {
-            window.location.href = "{{ route("master.lokasiBarang.downloadTemplate") }}";
+            window.location.href = "{{ route("master.supplierBarang.downloadTemplate") }}";
         });
 
-        $('#lokasiExcellForm').on('submit', function(e) {
-            e.preventDefault(); 
+        // upload excell
+        $('#supplierExcellForm').on('submit', function(e) {
+            e.preventDefault();
 
             let formData = new FormData(this);
 
@@ -272,7 +274,7 @@
             });
 
             $.ajax({
-                url: "{{ route("master.lokasiBarang.uploadTemplate") }}",
+                url: "{{ route("master.supplierBarang.uploadTemplate") }}",
                 method: "POST",
                 data: formData,
                 processData: false,
@@ -299,10 +301,9 @@
                         icon: 'success',
                         confirmButtonText: 'Tutup'
                     }).then(() => {
-                        $('#lokasiExcellModal').modal('hide');
-                        document.getElementById('lokasiExcellForm').reset();
-                        lokasiTable.ajax.reload();
-
+                        $('#supplierExcellModal').modal('hide');
+                        document.getElementById('supplierExcellForm').reset();
+                        supplierTable.ajax.reload();
                     });
                 },
                 error: function(xhr) {
@@ -317,14 +318,6 @@
             });
         });
 
-        window.closeLokasiForm = function closeLokasiForm() {
-            // Sembunyikan div form
-            const formContainer = document.getElementById('lokasiFormContainer');
-            formContainer.style.display = 'none';
-
-            // Reset form jika diperlukan
-            document.getElementById('lokasiForm').reset();
-        }
 
     });
 </script>

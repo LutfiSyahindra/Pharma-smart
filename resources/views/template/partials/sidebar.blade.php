@@ -58,7 +58,7 @@
                                 <a href="" class="nav-link">Kategori</a>
                             </li>
                             <li class="nav-item">
-                                <a href="" class="nav-link">Supplier</a>
+                                <a href="{{ route("master.supplierBarang") }}" class="nav-link">Supplier</a>
                             </li>
                             <li class="nav-item">
                                 <a href="{{ route("master.lokasiBarang") }}" class="nav-link">Lokasi Barang</a>
